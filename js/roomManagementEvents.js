@@ -48,7 +48,7 @@ $(document).ready(function(){
 	$("#roomButton").click(function(){
 		$("#roomsTable thead").empty();
 		$("#roomsTable thead").append(
-			"	<td><strong><small>Id</small></strong></td> \
+			"	<td><strong><small>Id Salon</small></strong></td> \
 				<td><strong><small>Zona</small></strong></td> \
 				<td><strong><small>Precio</small></strong></td> \
 				<td><strong><small>Borrar</small></strong></td> "
@@ -60,7 +60,7 @@ $(document).ready(function(){
 	$("#bedroomButton").click(function(){
 		$("#roomsTable thead").empty();
 		$("#roomsTable thead").append(
-			"	<td><strong><small>Id</small></strong></td> \
+			"	<td><strong><small>Id Habitacion</small></strong></td> \
 				<td><strong><small>Zona</small></strong></td> \
 				<td><strong><small>Precio</small></strong></td> \
 				<td><strong><small>Borrar</small></strong></td> "

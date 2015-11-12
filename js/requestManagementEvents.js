@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	
 	var last;
-
+	
 	$("#buttonRequestManagement").attr("disabled", true);
 
 
@@ -86,35 +86,23 @@ $(document).ready(function(){
 
 	});
 
-	function lookForRoomOrBedroom(id){
-		$.getJSON("./api/?action=getRooms", function(data) {
-			isRoom = data.hasOwnProperty(id);
-			
-			if (isRoom)
-				$("#rightPanel").append(
-					"<p><strong>Categoria:</strong> Room</p> \
-					<p><strong>Id: </strong>"+id+"</p> \
-					<p><strong>Zona: </strong>"+data[id]['zone']+"</p> \
-					<p><strong>Precio: </strong>"+data[id]['price']+"</p>" 
-				);
-		});
-		
-		$.getJSON("./api/?action=getBedrooms", function(data) {
-			isBedroom = data.hasOwnProperty(id);
-
-			if (isBedroom)
-				$("#rightPanel").append(
-					"<p><strong>Categoria:</strong> BedRoom</p> \
-					<p><strong>Id: </strong>"+id+"</p> \
-					<p><strong>Zona: </strong>"+data[id]['zone']+"</p> \
-					<p><strong>Precio: </strong>"+data[id]['price']+"</p>" 
-				);
-		});
-	}
 
 	$("#requestsTable").on("click",".selectButton", function(){
 		$("#rightPanel").empty();
-		lookForRoomOrBedroom($(this).text());
+		
+		url = "./api/?action=";
+		url += 	(last == "room")? "getRooms":"getBedrooms";
+		id = $(this).text(); 
+
+		$.getJSON(url , function( data ) {
+			$("#rightPanel").append(
+				"<p><strong>Categoria: </strong>"+last+"</p> \
+				<p><strong>Id: </strong>"+id+"</p> \
+				<p><strong>Zona: </strong>"+data[id]['zone']+"</p> \
+				<p><strong>Precio: </strong>"+data[id]['price']+"</p>" 
+			);
+			
+		});	
 	});
 
 	$("#requestsTable").on("click",".confirmButton", function(){

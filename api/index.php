@@ -20,95 +20,6 @@ $possible_url = [
 	"addBedroomRequest"
     ];
 
-function getRoomsRequests(){
-    echo '{
-	"roomRequest1":{
-		"idRoom":"room1",
-		"user": "user1",
-		"advancePayment": "100"
-	},
-	"roomRequest2":{
-		"idRoom":"room2",
-		"user": "user2",
-		"advancePayment": "100"
-	},
-	"roomRequest3":{
-		"idRoom":"room3",
-		"user": "user3",
-		"advancePayment": "100"
-	},
-	"roomRequest4":{
-		"idRoom":"room4",
-		"user": "user4",
-		"advancePayment": "100"
-	},
-	"roomRequest5":{
-		"idRoom":"room5",
-		"user": "user5",
-		"advancePayment": "100"
-	}
-}';
-}
-
-function getBedroomsRequests(){
-    echo '{
-	"bedroomRequest1":{
-		"idBedroom":"bedroom1",
-		"user": "user1",
-		"advancePayment": "100"
-	},
-	"bedroomRequest2":{
-		"idBedroom":"bedroom2",
-		"user": "user2",
-		"advancePayment": "100"
-	},
-	"bedroomRequest3":{
-		"idBedroom":"bedroom3",
-		"user": "user3",
-		"advancePayment": "100"
-	},
-	"bedroomRequest4":{
-		"idBedroom":"bedroom4",
-		"user": "user4",
-		"advancePayment": "100"
-	},
-	"bedroomRequest5":{
-		"idBedroom":"bedroom5",
-		"user": "user5",
-		"advancePayment": "100"
-	}
-}';
-}
-
-function getConfirmedRequests(){
-	echo '{
-	"bedroomRequest11":{
-		"id":"bedroom1",
-		"user": "user1",
-		"advancePayment": "100"
-	},
-	"bedroomRequest22":{
-		"id":"bedroom2",
-		"user": "user2",
-		"advancePayment": "100"
-	},
-	"roomRequest33":{
-		"id":"bedroom3",
-		"user": "user3",
-		"advancePayment": "100"
-	},
-	"roomRequest45":{
-		"id":"bedroom4",
-		"user": "user4",
-		"advancePayment": "100"
-	},
-	"bedroomRequest75":{
-		"id":"bedroom5",
-		"user": "user5",
-		"advancePayment": "100"
-	}
-}';
-}
 
 function validateUser(){
 
@@ -182,13 +93,14 @@ if (isset($_GET["action"]) && in_array($_GET["action"], $possible_url)) {
     $_GET["action"]();
 
 } else {
-	echo "<br><br><a href='./?action=getRooms'> getRooms </a>";
-	echo "<br><br><a href='./?action=getBedrooms'> getBedrooms </a>";
-	echo "<br><br><a href='./?action=getRoomsRequests'> getRoomsRequests </a>";
-	echo "<br><br><a href='./?action=getBedroomsRequests'> getBedroomsRequests </a>";
-	echo "<br><br><a href='./?action=getConfirmedRequests'> getConfirmedRequests </a>";
+	echo "<br><br><a href='./?action=getRooms'> getRooms IMPLEMENTADOOOOOO </a>";
+	echo "<br><br><a href='./?action=getBedrooms'> getBedrooms IMPLEMENTADOOOOOO </a>";
+	echo "<br><br><a href='./?action=getRoomsRequests'> getRoomsRequests IMPLEMENTADOOOOOO  </a>";
+	echo "<br><br><a href='./?action=getBedroomsRequests'> getBedroomsRequests  IMPLEMENTADOOOOOO </a>";
+	echo "<br><br><a href='./?action=getConfirmedRequests'> getConfirmedRequests IMPLEMENTADOOOOOO  </a>";
+	echo "<br><br><a href='./?action=getUsers'> getUsers </a> IMPLEMENTADOOOOOO ";
+	
 	echo "<br><br><a href='./?action=validateUser'> validateUser</a>";
-	echo "<br><br><a href='./?action=getUsers'> getUsers </a>";
 	echo "<br><br><a href='./?action=deleteRoom'> deleteRoom</a>";
 	echo "<br><br><a href='./?action=deleteBedroom'> deleteBedroom</a>";
 	echo "<br><br><a href='./?action=confirmRoomRequest'> confirmRoomRequest</a>";

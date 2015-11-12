@@ -52,3 +52,68 @@ function getUsers() {
     echo json_encode($value);
         
 }
+
+function getRoomsRequests() {
+    connectDatabase();        
+    $query = sprintf("	SELECT roomRequestId, roomId, userId, advancePayment 
+    					FROM roomRequest
+    					wHERE isConfirmed = 0");
+    $result = mysql_query($query);
+
+    while ($row_errs = mysql_fetch_assoc($result))
+        $value[$row_errs['roomRequestId']] = [
+    	   	"idRoom" => $row_errs['roomId'],
+        	"user" => $row_errs['userId'],
+            "advancePayment" => $row_errs['advancePayment']];
+        
+    echo json_encode($value);
+        
+}
+
+function getBedroomsRequests() {
+    connectDatabase();        
+    $query = sprintf("	SELECT bedroomRequestId, bedroomId, userId, advancePayment 
+    					FROM bedroomRequest
+    					wHERE isConfirmed = 0");
+    $result = mysql_query($query);
+
+    while ($row_errs = mysql_fetch_assoc($result))
+        $value[$row_errs['bedroomRequestId']] = [
+    	   	"idBedroom" => $row_errs['bedroomId'],
+        	"user" => $row_errs['userId'],
+            "advancePayment" => $row_errs['advancePayment']];
+        
+    echo json_encode($value);
+        
+}
+
+function getConfirmedRequests() {
+    connectDatabase();        
+    
+    $query1 = sprintf("	SELECT bedroomRequestId, bedroomId, userId, advancePayment 
+    					FROM bedroomRequest
+    					wHERE isConfirmed = 1");
+
+    $query2 = sprintf("	SELECT roomRequestId, roomId, userId, advancePayment 
+    					FROM roomRequest
+    					wHERE isConfirmed = 1");
+
+    $result1 = mysql_query($query1);
+    $result2 = mysql_query($query2);
+
+    while ($row_errs = mysql_fetch_assoc($result1))
+        $value[$row_errs['bedroomRequestId']] = [
+    	   	"id" => $row_errs['bedroomId'],
+        	"user" => $row_errs['userId'],
+            "advancePayment" => $row_errs['advancePayment']];
+	
+	while ($row_errs = mysql_fetch_assoc($result2))
+        $value[$row_errs['roomRequestId']] = [
+    	   	"id" => $row_errs['roomId'],
+        	"user" => $row_errs['userId'],
+            "advancePayment" => $row_errs['advancePayment']];
+        
+    echo json_encode($value);
+
+        
+}
