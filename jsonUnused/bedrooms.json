@@ -1,0 +1,37 @@
+{
+	"bedroom1": {	
+		"zone": "Capital",
+		"price": "1500$",
+		"datoRelleno1": "Relleno1",
+		"datoRelleno2": "Relleno2",
+		"datoRelleno3": "Relleno3"
+	},
+	"bedroom2":	{
+		"zone": "Carlos Paz",
+		"price": "3000$",
+		"datoRelleno1": "Relleno1",
+		"datoRelleno2": "Relleno2",
+		"datoRelleno3": "Relleno3"
+	},
+	"bedroom3": {	
+		"zone": "Capital",
+		"price": "5000$",
+		"datoRelleno1": "Relleno1",
+		"datoRelleno2": "Relleno2",
+		"datoRelleno3": "Relleno3"
+	},
+	"bedroom4":	{	
+		"zone": "Rio Cuarto",
+		"price": "1000$",
+		"datoRelleno1": "Relleno1",
+		"datoRelleno2": "Relleno2",
+		"datoRelleno3": "Relleno3"
+	},
+	"bedroom5":	{	
+		"zone": "Villa Allende",
+		"price": "2000$",
+		"datoRelleno1": "Relleno1",
+		"datoRelleno2": "Relleno2",
+		"datoRelleno3": "Relleno3"
+	}
+}

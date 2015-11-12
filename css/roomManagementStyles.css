@@ -1,0 +1,8 @@
+#roomsTable{
+	text-align: center;
+}
+
+.deleteButton{
+	color:white;
+	background-color: rgba(200,0,0,1);
+}
