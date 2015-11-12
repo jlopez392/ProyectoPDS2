@@ -20,29 +20,14 @@ $possible_url = [
 	"addBedroomRequest"
     ];
 
-
+/*
 function validateUser(){
 
 	if (isset($_GET["username"]) && isset($_GET["password"])){
 		echo $_GET["username"];
 		echo $_GET["password"];
 	}	
-}
-
-function deleteRoom(){
-	if (isset($_GET["idToDelete"])){
-   		echo "Se ha borrado con exito ";
-   		echo $_GET["idToDelete"];
-   		
-	}
-}
-
-function deleteBedroom(){
-	if (isset($_GET["idToDelete"])){
-		echo "Se ha borrado con exito ";
-   		echo $_GET["idToDelete"];
-	}
-}
+}*/
 
 function confirmRoomRequest(){
 	if (isset($_GET["idToConfirm"])){
@@ -89,20 +74,20 @@ function addBedroomRequest() {
 }
 
 if (isset($_GET["action"]) && in_array($_GET["action"], $possible_url)) {
-
-    $_GET["action"]();
-
+	
+	$_GET["action"]();	
+	
 } else {
 	echo "<br><br><a href='./?action=getRooms'> getRooms IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=getBedrooms'> getBedrooms IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=getRoomsRequests'> getRoomsRequests IMPLEMENTADOOOOOO  </a>";
 	echo "<br><br><a href='./?action=getBedroomsRequests'> getBedroomsRequests  IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=getConfirmedRequests'> getConfirmedRequests IMPLEMENTADOOOOOO  </a>";
-	echo "<br><br><a href='./?action=getUsers'> getUsers </a> IMPLEMENTADOOOOOO ";
-	
-	echo "<br><br><a href='./?action=validateUser'> validateUser</a>";
-	echo "<br><br><a href='./?action=deleteRoom'> deleteRoom</a>";
-	echo "<br><br><a href='./?action=deleteBedroom'> deleteBedroom</a>";
+	echo "<br><br><a href='./?action=getUsers'> getUsers IMPLEMENTADOOOOOO </a>";
+	echo "<br><br><a href='./?action=deleteRoom'> deleteRoom IMPLEMENTADOOOOOO </a>";
+	echo "<br><br><a href='./?action=deleteBedroom'> deleteBedroom IMPLEMENTADOOOOOO </a>";
+	echo "<br><br><a href='./?action=validateUser'> validateUser IMPLEMENTADOOOOOO </a>";
+
 	echo "<br><br><a href='./?action=confirmRoomRequest'> confirmRoomRequest</a>";
 	echo "<br><br><a href='./?action=confirmBedroomRequest'> confirmBedroomRequest</a>";
 	echo "<br><br><a href='./?action=addRoom'> addRoom</a>";

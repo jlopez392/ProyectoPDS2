@@ -114,6 +114,44 @@ function getConfirmedRequests() {
             "advancePayment" => $row_errs['advancePayment']];
         
     echo json_encode($value);
-
         
+}
+
+function deleteRoom(){
+	isset($_GET["idToDelete"])? $id = $_GET["idToDelete"]: exit(); 
+	
+	connectDatabase();        
+    $query = sprintf("DELETE FROM room WHERE roomId = $id");
+    $result = mysql_query($query);
+    
+    echo "Se ha borrado con exito el elemento";
+}
+
+function deleteBedroom(){
+	isset($_GET["idToDelete"])? $id = $_GET["idToDelete"]: exit(); 
+	
+	connectDatabase();        
+    $query = sprintf("DELETE FROM bedroom WHERE bedroomId = $id");
+    $result = mysql_query($query);
+    
+    echo "Se ha borrado con exito el elemento";
+}
+
+function validateUser(){
+
+	if (!(isset($_GET["username"]) && isset($_GET["password"])))
+		exit("Son necesarios username y password");
+
+	$username = $_GET["username"];
+	$password = $_GET["password"];
+
+	connectDatabase();        
+    $query = sprintf("	SELECT username, password 
+    					FROM user 
+    					wHERE username = '$username' AND password = $password");
+
+    $result = mysql_query($query);
+
+    echo ($row_errs = mysql_fetch_assoc($result))? 1: 0;
+
 }

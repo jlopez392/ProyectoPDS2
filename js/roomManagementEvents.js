@@ -92,7 +92,8 @@ $(document).ready(function(){
 		});
 
 		geting.done(function( data ) {
-			alert(data)
+			alert(data);
+			(last == "room")? $("#roomButton").click() : $("#bedroomButton").click();
 		});
 
 
