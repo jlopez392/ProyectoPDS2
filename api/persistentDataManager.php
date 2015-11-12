@@ -1,7 +1,7 @@
 <?php
 
 function connectDatabase() {
-	$localhost = ['localhost', 'PDS2ProyectDB', 'root', 'a1b2c3jaflg'];
+	$localhost = ['localhost', 'PDS2ProyectDB', 'root', 'abcd'];
    	$link = mysql_connect($localhost[0], $localhost[2], $localhost[3])
                 or die('Coneccion fallida: ' . mysql_error());
 	 		mysql_select_db($localhost[1])
