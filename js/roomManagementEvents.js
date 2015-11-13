@@ -73,10 +73,12 @@ $(document).ready(function(){
 		item = (rooms[$(this).text()])? rooms : bedrooms;
 		$("#rightPanel").empty();
 		$("#rightPanel").append(
-			"<p><strong>Categoria:</strong> "+$(this).text()+"</p> \
-			<p><strong>Id: </strong>"+$(this).text()+"</p> \
-			<p><strong>Zona: </strong>"+item[$(this).text()]['zone']+"</p> \
-			<p><strong>Precio: </strong>"+item[$(this).text()]['price']+"</p>" 
+			"<ul class='list-group'> \
+			<li class='list-group-item'><strong>Categoria:</strong> "+$(this).text()+"</li> \
+			<li class='list-group-item'><strong>Id: </strong>"+$(this).text()+"</li> \
+			<li class='list-group-item'><strong>Zona: </strong>"+item[$(this).text()]['zone']+"</li> \
+			<li class='list-group-item'><strong>Precio: </strong>"+item[$(this).text()]['price']+"</li> \
+			</ul>" 
 
 			);
 	});

@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	
 	var last;
-	
+
 	$("#buttonRequestManagement").attr("disabled", true);
 
 
@@ -10,8 +10,8 @@ $(document).ready(function(){
 	});
 
 	function printRoomRequest(){
+		last = "room";
 		$.getJSON("./api/?action=getRoomsRequests", function( data ) {
-			last = "room";
 			$.each(data, function( index, value ) {
 				$("#requestsTable tbody").append(
 					"<tr> \
@@ -22,13 +22,14 @@ $(document).ready(function(){
 				  		<td><button id="+index+" class='confirmButton btn'>Confirmar</btn></td> \
 			  		</tr>"
 				);
+				$(".selectButton").addClass(value["category"]);
 			});
 		});
 	}
 
 	function printBedroomRequest(){
+		last = "bedroom";
 		$.getJSON("./api/?action=getBedroomsRequests", function( data ) {
-			last = "bedroom";
 			$.each(data, function( index, value ) {
 				$("#requestsTable tbody").append(
 					"<tr> \
@@ -39,6 +40,7 @@ $(document).ready(function(){
 				  		<td><button id="+index+" class='confirmButton btn'>Confirmar</btn></td> \
 			  		</tr>"
 				);
+				$(".selectButton").addClass(value["category"]);
 			});
 		});
 	}
@@ -53,6 +55,8 @@ $(document).ready(function(){
 				  		<td><button class='showUserButton btn'>"+value["user"]+"</button></td> \
 			  		</tr>"
 				);
+				$(".selectButton").addClass(value["category"]);
+
 			});
 		});
 	}
@@ -65,7 +69,6 @@ $(document).ready(function(){
 				<td><strong><small>Usuario</small></strong></td> \
 				<td><strong><small>Senia</small></strong></td> \
 				<td><strong><small>Confirmar</small></strong></td> "
- 
 		);
 		$("#requestsTable tbody").empty();
 		printRoomRequest();
@@ -90,13 +93,15 @@ $(document).ready(function(){
 	$("#requestsTable").on("click",".selectButton", function(){
 		$("#rightPanel").empty();
 		
+		category = $(this).hasClass("bedroom")? "bedroom": "room";
 		url = "./api/?action=";
-		url += 	(last == "room")? "getRooms":"getBedrooms";
+		url += (category == "room")? "getRoom":"getBedroom";
 		id = $(this).text(); 
+		url += "&id="+id;
 
 		$.getJSON(url , function( data ) {
 			$("#rightPanel").append(
-				"<p><strong>Categoria: </strong>"+last+"</p> \
+				"<p><strong>Categoria: </strong>"+category+"</p> \
 				<p><strong>Id: </strong>"+id+"</p> \
 				<p><strong>Zona: </strong>"+data[id]['zone']+"</p> \
 				<p><strong>Precio: </strong>"+data[id]['price']+"</p>" 
@@ -110,14 +115,18 @@ $(document).ready(function(){
 		idToSend = $(this).attr("id");
 		actionToGet = 	(last == "room")? "confirmRoomRequest":"confirmBedroomRequest";
 
+		alert(actionToGet);
+
 		var geting = $.get( "./api/?", {
 			action: actionToGet, 
 			idToConfirm: idToSend
 		});
 
 		geting.done(function( data ) {
-			alert(data)
+			alert(data);
 		});
+
+		(last == "room")? $("#roomRequestButton").click() : $("#bedroomRequestButton").click();
 
 	});
 

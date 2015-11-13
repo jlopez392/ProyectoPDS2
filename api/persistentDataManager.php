@@ -9,15 +9,15 @@ function connectDatabase() {
 }
 
 function getRooms() {
-    connectDatabase();        
+	connectDatabase();        
     $query = sprintf("SELECT * FROM room WHERE available = 1");
     $result = mysql_query($query);
 
-    while ($row_errs = mysql_fetch_assoc($result))
-        $value[$row_errs['roomId']] = [
-         	"zone" => $row_errs['zone'],
-            "price" => $row_errs['price'],
-            "ownerId" => $row_errs['ownerId']];
+    while ($row = mysql_fetch_assoc($result))
+        $value[$row['roomId']] = [
+         	"zone" => $row['zone'],
+            "price" => $row['price'],
+            "ownerId" => $row['ownerId']];
         
     echo json_encode($value);
         
@@ -28,26 +28,59 @@ function getBedrooms() {
     $query = sprintf("SELECT * FROM bedroom WHERE available = 1");
     $result = mysql_query($query);
 
-    while ($row_errs = mysql_fetch_assoc($result))
-        $value[$row_errs['bedroomId']] = [
-         	"zone" => $row_errs['zone'],
-            "price" => $row_errs['price'],
-            "ownerId" => $row_errs['ownerId']];
+    while ($row = mysql_fetch_assoc($result))
+        $value[$row['bedroomId']] = [
+         	"zone" => $row['zone'],
+            "price" => $row['price'],
+            "ownerId" => $row['ownerId']];
         
     echo json_encode($value);
         
 }
+
+function getRoom() {
+	$id = (isset($_GET["id"]))? $_GET["id"] : exit();
+    connectDatabase();        
+    $query = sprintf("SELECT * FROM room WHERE roomId = '$id'");
+    $result = mysql_query($query);
+
+    while ($row = mysql_fetch_assoc($result))
+        $value[$row['roomId']] = [
+         	"zone" => $row['zone'],
+            "price" => $row['price'],
+            "ownerId" => $row['ownerId']];
+        
+    echo json_encode($value);
+        
+}
+
+function getBedroom() {
+	$id = (isset($_GET["id"]))? $_GET["id"] : exit();
+    connectDatabase();        
+    $query = sprintf("SELECT * FROM bedroom WHERE bedroomId = '$id'");
+    $result = mysql_query($query);
+
+    while ($row = mysql_fetch_assoc($result))
+        $value[$row['bedroomId']] = [
+         	"zone" => $row['zone'],
+            "price" => $row['price'],
+            "ownerId" => $row['ownerId']];
+        
+    echo json_encode($value);
+        
+}
+
 
 function getUsers() {
     connectDatabase();        
     $query = sprintf("SELECT username, name, lastname, numberPhone FROM user");
     $result = mysql_query($query);
 
-    while ($row_errs = mysql_fetch_assoc($result))
-        $value[$row_errs['username']] = [
-    	   	"name" => $row_errs['name'],
-        	"lastname" => $row_errs['lastname'],
-            "numberPhone" => $row_errs['numberPhone']];
+    while ($row = mysql_fetch_assoc($result))
+        $value[$row['username']] = [
+    	   	"name" => $row['name'],
+        	"lastname" => $row['lastname'],
+            "numberPhone" => $row['numberPhone']];
         
     echo json_encode($value);
         
@@ -60,11 +93,12 @@ function getRoomsRequests() {
     					wHERE isConfirmed = 0");
     $result = mysql_query($query);
 
-    while ($row_errs = mysql_fetch_assoc($result))
-        $value[$row_errs['roomRequestId']] = [
-    	   	"idRoom" => $row_errs['roomId'],
-        	"user" => $row_errs['userId'],
-            "advancePayment" => $row_errs['advancePayment']];
+    while ($row = mysql_fetch_assoc($result))
+        $value[$row['roomRequestId']] = [
+    	   	"idRoom" => $row['roomId'],
+        	"user" => $row['userId'],
+            "advancePayment" => $row['advancePayment'],
+            "category" => "room"];
         
     echo json_encode($value);
         
@@ -77,11 +111,12 @@ function getBedroomsRequests() {
     					wHERE isConfirmed = 0");
     $result = mysql_query($query);
 
-    while ($row_errs = mysql_fetch_assoc($result))
-        $value[$row_errs['bedroomRequestId']] = [
-    	   	"idBedroom" => $row_errs['bedroomId'],
-        	"user" => $row_errs['userId'],
-            "advancePayment" => $row_errs['advancePayment']];
+    while ($row = mysql_fetch_assoc($result))
+        $value[$row['bedroomRequestId']] = [
+    	   	"idBedroom" => $row['bedroomId'],
+        	"user" => $row['userId'],
+            "advancePayment" => $row['advancePayment'],
+            "category" => "bedroom"];
         
     echo json_encode($value);
         
@@ -101,17 +136,19 @@ function getConfirmedRequests() {
     $result1 = mysql_query($query1);
     $result2 = mysql_query($query2);
 
-    while ($row_errs = mysql_fetch_assoc($result1))
-        $value[$row_errs['bedroomRequestId']] = [
-    	   	"id" => $row_errs['bedroomId'],
-        	"user" => $row_errs['userId'],
-            "advancePayment" => $row_errs['advancePayment']];
+    while ($row = mysql_fetch_assoc($result1))
+        $value[$row['bedroomRequestId']] = [
+    	   	"id" => $row['bedroomId'],
+        	"user" => $row['userId'],
+            "advancePayment" => $row['advancePayment'],
+            "category" => "bedroom"];
 	
-	while ($row_errs = mysql_fetch_assoc($result2))
-        $value[$row_errs['roomRequestId']] = [
-    	   	"id" => $row_errs['roomId'],
-        	"user" => $row_errs['userId'],
-            "advancePayment" => $row_errs['advancePayment']];
+	while ($row = mysql_fetch_assoc($result2))
+        $value[$row['roomRequestId']] = [
+    	   	"id" => $row['roomId'],
+        	"user" => $row['userId'],
+            "advancePayment" => $row['advancePayment'],
+            "category" => "room"];
         
     echo json_encode($value);
         
@@ -128,18 +165,18 @@ function deleteRoom(){
 }
 
 function deleteBedroom(){
-	isset($_GET["idToDelete"])? $id = $_GET["idToDelete"]: exit(); 
+	isset($_GET["idToDelete"])? $id = $_GET["idToDelete"]: exit("Parameter is missing"); 
 	
 	connectDatabase();        
     $query = sprintf("DELETE FROM bedroom WHERE bedroomId = $id");
-    $result = mysql_query($query);
+    mysql_query($query);
     
     echo "Se ha borrado con exito el elemento";
 }
 
 function validateUser(){
 
-	if (!(isset($_GET["username"]) && isset($_GET["password"])))
+	if ( !(isset($_GET["username"]) && isset($_GET["password"])) )
 		exit("Son necesarios username y password");
 
 	$username = $_GET["username"];
@@ -152,6 +189,58 @@ function validateUser(){
 
     $result = mysql_query($query);
 
-    echo ($row_errs = mysql_fetch_assoc($result))? 1: 0;
+    echo ($row = mysql_fetch_assoc($result))? 1: 0;
 
 }
+
+
+//Falta eliminar demás solicitudes sobre la misma habitacion
+function confirmRoomRequest(){
+	isset($_GET["idToConfirm"])? $id = $_GET["idToConfirm"]: exit("Parameter is missing");
+
+	connectDatabase();        
+    $query = sprintf("UPDATE roomRequest SET isConfirmed = 1 WHERE roomRequestId ='$id'");
+    mysql_query($query);
+    $query = sprintf("	UPDATE room 
+						SET available = 0 
+						WHERE roomId in (
+							SELECT roomId 
+							FROM roomRequest 
+							WHERE roomRequestId = $id
+						)");
+
+    mysql_query($query);
+
+    echo "Se ha confirmado la solicitud de reserva del salon";
+
+}
+
+function confirmBedroomRequest(){
+	isset($_GET["idToConfirm"])? $id = $_GET["idToConfirm"]: exit("Parameter is missing");
+
+	connectDatabase();        
+    $query = sprintf("UPDATE bedroomRequest SET isConfirmed = 1 WHERE bedroomRequestId ='$id'");
+    mysql_query($query);
+    $query = sprintf("	UPDATE bedroom 
+						SET available = 0 
+						WHERE bedroomId in (
+							SELECT bedroomId 
+							FROM bedroomRequest 
+							WHERE bedroomRequestId = $id
+						)");
+
+    mysql_query($query);
+
+    echo "Se ha confirmado la solicitud de reserva de la habitacion";
+
+}
+
+/*
+//UPDATE `PDS2ProyectDB`.`bedroom` SET `available` = '0' WHERE `bedroom`.`bedroomId` =1;
+//UPDATE `PDS2ProyectDB`.`roomRequest` SET `isConfirmed` = '1' WHERE `roomRequest`.`roomRequestId` =99;
+function confirmBedroomRequest(){
+	if (isset($_GET["idToConfirm"])){
+		echo "Se ha confirmado la solicitud de reserva de la habitacion ";
+		echo $_GET["idToConfirm"];
+	}
+}*/
