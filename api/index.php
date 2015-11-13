@@ -3,7 +3,7 @@
 include ("persistentDataManager.php");
 
 $possible_url = [
-	"getCurrentOwner",
+	"getCurrentUser",
 	"getRooms",
     "getBedrooms",
     "getRoom",
@@ -60,7 +60,7 @@ if (isset($_GET["action"]) && in_array($_GET["action"], $possible_url)) {
 	$_GET["action"]();	
 	
 } else {
-	echo "<br><br><a href='./?action=getCurrentOwner'> getCurrentOwner IMPLEMENTADOOOOOO </a>";
+	echo "<br><br><a href='./?action=getCurrentUser'> getCurrentUser IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=getRooms'> getRooms IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=getBedrooms'> getBedrooms IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=getRoom'> getRoom IMPLEMENTADOOOOOO </a>";

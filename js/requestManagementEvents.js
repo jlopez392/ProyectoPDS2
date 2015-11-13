@@ -3,10 +3,10 @@ $(document).ready(function(){
 	var owner;
 	var last;
 
-	function getCurrentOwner(){
+	function getCurrentUser(){
 		
 		var geting = $.get( "./api/?", {
-			action: "getCurrentOwner"
+			action: "getCurrentUser"
 		});
 
 		geting.done(function( data ) {
@@ -14,7 +14,7 @@ $(document).ready(function(){
 		});
 	}
 
-	getCurrentOwner();
+	getCurrentUser();
 
 	$("#buttonRequestManagement").attr("disabled", true);
 

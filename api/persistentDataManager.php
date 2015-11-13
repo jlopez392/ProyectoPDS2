@@ -1,5 +1,6 @@
 <?php
 
+/*Funcion que realiza la conexión a la base de datos.*/
 function connectDatabase() {
 	$localhost = ['localhost', 'PDS2ProyectDB', 'root', 'abcd'];
    	$link = mysql_connect($localhost[0], $localhost[2], $localhost[3])
@@ -8,11 +9,18 @@ function connectDatabase() {
                 or die('No se pudo seleccionar la base de datos');
 }
 
-function getCurrentOwner(){
+/*Funcion que devuelve el id del usuario actual*/
+function getCurrentUser(){
     session_start();
     echo $_SESSION['username'];
 }
 
+/*Funcion que devuelve un json con todas los salones disponibles.
+    Funciona de dos maneras.
+    Si no se le pasa parametros devuelve todas los salones disponibles.
+    Si se le pasa el id del owner, se devuelve todas los salones disponibles
+    correspondientes a ese owner.
+*/
 function getRooms() {
 	connectDatabase();        
     $query = sprintf("SELECT * FROM room WHERE available = 1");
@@ -29,6 +37,12 @@ function getRooms() {
         
 }
 
+/*Funcion que devuelve un json con todas las habitaciones disponibles.
+    Funciona de dos maneras.
+    Si no se le pasa parametros devuelve todas las habitaciones disponibles.
+    Si se le pasa el id del owner, se devuelve todas las habitaciones disponibles
+    correspondientes a ese owner.
+*/
 function getBedrooms() {
     connectDatabase();        
     $query = sprintf("SELECT * FROM bedroom WHERE available = 1");
@@ -47,6 +61,7 @@ function getBedrooms() {
         
 }
 
+/*Funcion que devuelve un json con unicamente el salon correspondiente al id pasado por parametro*/
 function getRoom() {
 	$id = (isset($_GET["id"]))? $_GET["id"] : exit();
     connectDatabase();        
@@ -63,6 +78,7 @@ function getRoom() {
         
 }
 
+/*Funcion que devuelve un json con unicamente la habitacion correspondiente al id pasado por parametro*/
 function getBedroom() {
 	$id = (isset($_GET["id"]))? $_GET["id"] : exit();
     connectDatabase();        
@@ -80,7 +96,7 @@ function getBedroom() {
         
 }
 
-
+/*Funcion que devuelve un json con la lista de todos los usuarios de la base de datos.SOLO DATOS PUBLICOS*/
 function getUsers() {
     connectDatabase();        
     $query = sprintf("SELECT username, name, lastname, numberPhone FROM user");
@@ -96,11 +112,11 @@ function getUsers() {
         
 }
 
+
+/*Funcion que devuelve todas las solicitudes de reserva de salones en un json. Se le debe pasar por parametro
+el id del owner, para realizar el filtro.*/
 function getRoomsRequests() {
     connectDatabase();        
-    /*$query = sprintf("	SELECT roomRequestId, roomId, userId, advancePayment 
-    					FROM roomRequest
-    					wHERE isConfirmed = 0");*/
 
     if (isset($_GET["ownerId"])){
         $ownerId = $_GET["ownerId"];
@@ -125,11 +141,10 @@ function getRoomsRequests() {
         
 }
 
+/*Funcion que devuelve todas las solicitudes de reserva de habitaciones en un json. Se le debe pasar por parametro
+el id del owner, para realizar el filtro.*/
 function getBedroomsRequests() {
     connectDatabase();        
-    /*$query = sprintf("	SELECT bedroomRequestId, bedroomId, userId, advancePayment 
-    					FROM bedroomRequest
-    					wHERE isConfirmed = 0");*/
 
     if (isset($_GET["ownerId"])){
         $ownerId = $_GET["ownerId"];
@@ -153,16 +168,12 @@ function getBedroomsRequests() {
         
 }
 
+
+/*Funcion que devuelve todas las solicitudes de reserva confirmadas. Se le debe pasar por parametro
+el id del owner, para realizar el filtro.*/
 function getConfirmedRequests() {
     connectDatabase();        
     
-    /*$query1 = sprintf("	SELECT bedroomRequestId, bedroomId, userId, advancePayment 
-    					FROM bedroomRequest
-    					wHERE isConfirmed = 1");
-
-    $query2 = sprintf("	SELECT roomRequestId, roomId, userId, advancePayment 
-    					FROM roomRequest
-    					wHERE isConfirmed = 1");*/
 
     if (isset($_GET["ownerId"])){
         $ownerId = $_GET["ownerId"];
@@ -202,6 +213,8 @@ function getConfirmedRequests() {
         
 }
 
+
+/*Funcion de borra un salon. Necesita que se le pase el id del objeto a borrar*/
 function deleteRoom(){
 	isset($_GET["idToDelete"])? $id = $_GET["idToDelete"]: exit(); 
 	
@@ -212,6 +225,8 @@ function deleteRoom(){
     echo "Se ha borrado con exito el elemento";
 }
 
+
+/*Funcion que borra una habitacion. Necesita que se le pase el id del objeto a borrar*/
 function deleteBedroom(){
 	isset($_GET["idToDelete"])? $id = $_GET["idToDelete"]: exit("Parameter is missing"); 
 	
@@ -222,6 +237,8 @@ function deleteBedroom(){
     echo "Se ha borrado con exito el elemento";
 }
 
+
+/*Funcion que recibe usuario y clave, y los compara en la base de datos para ver si son validos.*/
 function validateUser(){
 
 	if ( !(isset($_GET["username"]) && isset($_GET["password"])) )
@@ -245,6 +262,7 @@ function validateUser(){
     $_SESSION['username'] = $username;
 }
 
+/*Funcion que recibe usuario y clave de un owner, y los compara en la base de datos para ver si son validos.*/
 function validateOwner(){
 
     if ( !(isset($_GET["username"]) && isset($_GET["password"])) )
@@ -269,7 +287,7 @@ function validateOwner(){
 
 }
 
-
+/*Funcion que cierra la sesion*/
 function closeSession(){
     session_start();
     $_SESSION['active'] = 0;
@@ -277,6 +295,8 @@ function closeSession(){
 
 
 //Falta eliminar demás solicitudes sobre la misma habitacion
+
+/*Funcion que confirma solicitudes de salon*/
 function confirmRoomRequest(){
 	isset($_GET["idToConfirm"])? $id = $_GET["idToConfirm"]: exit("Parameter is missing");
 
@@ -290,6 +310,7 @@ function confirmRoomRequest(){
     echo ($row = mysql_fetch_assoc($result))? 1: 0;
 }
 
+/*Funcion que confirma solicitudes de habitacion*/
 function confirmBedroomRequest(){
 	isset($_GET["idToConfirm"])? $id = $_GET["idToConfirm"]: exit("Parameter is missing");
 

@@ -13,10 +13,10 @@ $(document).ready(function(){
 	});
 
 
-	function getCurrentOwner(){
+	function getCurrentUser(){
 		
 		var geting = $.get( "./api/?", {
-			action: "getCurrentOwner"
+			action: "getCurrentUser"
 		});
 
 		geting.done(function( data ) {
@@ -24,7 +24,7 @@ $(document).ready(function(){
 		});
 	}
 
-	getCurrentOwner();
+	getCurrentUser();
 
 	function printRooms(){
 		$.getJSON("./api/?action=getRooms&ownerId="+owner, function( data ) {
