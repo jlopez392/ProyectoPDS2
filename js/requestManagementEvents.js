@@ -101,10 +101,13 @@ $(document).ready(function(){
 
 		$.getJSON(url , function( data ) {
 			$("#rightPanel").append(
-				"<p><strong>Categoria: </strong>"+category+"</p> \
-				<p><strong>Id: </strong>"+id+"</p> \
-				<p><strong>Zona: </strong>"+data[id]['zone']+"</p> \
-				<p><strong>Precio: </strong>"+data[id]['price']+"</p>" 
+"<ul class='list-group'> \
+	<li class='list-group-item'><span class='input-group-addon'>Categoria: </span>"+category+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>Id: </span>"+id+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>Zona: </span>"+data[id]['zone']+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>Precio: </span>"+data[id]['price']+"</li> \
+</ul>" 
+
 			);
 			
 		});	
@@ -137,13 +140,16 @@ $(document).ready(function(){
 			userFound = data.hasOwnProperty(username);
 			if (userFound)
 				$("#rightPanel").append(
-					"<p><strong>username:</strong> "+username+"</p> \
-					<p><strong>name: </strong>"+data[username]["name"]+"</p> \
-					<p><strong>lastname: </strong>"+data[username]["lastname"]+"</p> \
-					<p><strong>numberPhone: </strong>"+data[username]["numberPhone"]+"</p>" 
+"<ul class='list-group'> \
+	<li class='list-group-item'><span class='input-group-addon'>Username:</span> "+username+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>Name: </span>"+data[username]["name"]+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>Lastname: </span>"+data[username]["lastname"]+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>Number Phone: </span>"+data[username]["numberPhone"]+"</li> \
+</ul>"	
 				);
 		});
 	});
+
 
 	$("#requestsTable").on("click",".showRequestDetailsButton", function(){
 		$("#rightPanel").empty();
@@ -152,10 +158,12 @@ $(document).ready(function(){
 			requestFound = data.hasOwnProperty(idRequest);
 			if (requestFound)
 				$("#rightPanel").append(
-					"<p><strong>idRequest:</strong> "+idRequest+"</p> \
-					<p><strong>id: </strong>"+data[idRequest]["id"]+"</p> \
-					<p><strong>user: </strong>"+data[idRequest]["user"]+"</p> \
-					<p><strong>pago adelantado: </strong>"+data[idRequest]["advancePayment"]+"</p>" 
+"<ul class='list-group'> \
+	<li class='list-group-item'><span class='input-group-addon'>id solicitud:</span> "+idRequest+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>id salon o habitacion: </span>"+data[idRequest]["id"]+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>Usuario: </span>"+data[idRequest]["user"]+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>Pago adelantado: </span>"+data[idRequest]["advancePayment"]+"</li> \
+</ul>" 
 				);
 		});
 	});
