@@ -75,6 +75,16 @@ $(document).ready(function(){
 
 	});
 
+	$("#exitButton").click(function(){
+		var geting = $.get( "./api/?", {
+			action: "closeSession"
+		});
+
+		alert("Nos vemos...");
+		$(location).attr('href',"");
+
+	});
+
 
 });
 

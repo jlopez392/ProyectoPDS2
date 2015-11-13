@@ -1,17 +1,31 @@
 $(document).ready(function(){
-	
+
+	var owner;
 	var last;
+
+	function getCurrentOwner(){
+		
+		var geting = $.get( "./api/?", {
+			action: "getCurrentOwner"
+		});
+
+		geting.done(function( data ) {
+			owner = data;
+		});
+	}
+
+	getCurrentOwner();
 
 	$("#buttonRequestManagement").attr("disabled", true);
 
 
 	$("#buttonABM").click(function(){
-		$(location).attr('href',"roomManagement.html");
+		$(location).attr('href',"roomManagement.php");
 	});
 
 	function printRoomRequest(){
 		last = "room";
-		$.getJSON("./api/?action=getRoomsRequests", function( data ) {
+		$.getJSON("./api/?action=getRoomsRequests&ownerId="+owner, function( data ) {
 			$.each(data, function( index, value ) {
 				$("#requestsTable tbody").append(
 					"<tr> \
@@ -29,7 +43,7 @@ $(document).ready(function(){
 
 	function printBedroomRequest(){
 		last = "bedroom";
-		$.getJSON("./api/?action=getBedroomsRequests", function( data ) {
+		$.getJSON("./api/?action=getBedroomsRequests&ownerId="+owner, function( data ) {
 			$.each(data, function( index, value ) {
 				$("#requestsTable tbody").append(
 					"<tr> \
@@ -46,7 +60,7 @@ $(document).ready(function(){
 	}
 
 	function printConfirmedRequest(){
-		$.getJSON("./api/?action=getConfirmedRequests", function( data ) {
+		$.getJSON("./api/?action=getConfirmedRequests&ownerId="+owner, function( data ) {
 			$.each(data, function( index, value ) {
 				$("#requestsTable tbody").append(
 					"<tr> \
@@ -118,8 +132,6 @@ $(document).ready(function(){
 		idToSend = $(this).attr("id");
 		actionToGet = 	(last == "room")? "confirmRoomRequest":"confirmBedroomRequest";
 
-		alert(actionToGet);
-
 		var geting = $.get( "./api/?", {
 			action: actionToGet, 
 			idToConfirm: idToSend
@@ -154,7 +166,7 @@ $(document).ready(function(){
 	$("#requestsTable").on("click",".showRequestDetailsButton", function(){
 		$("#rightPanel").empty();
 		idRequest = $(this).text() 
-		$.getJSON("./api/?action=getConfirmedRequests", function(data) {
+		$.getJSON("./api/?action=getConfirmedRequests&ownerId="+owner, function(data) {
 			requestFound = data.hasOwnProperty(idRequest);
 			if (requestFound)
 				$("#rightPanel").append(
@@ -172,12 +184,23 @@ $(document).ready(function(){
 		$("#requestsTable thead").empty();
 		$("#requestsTable thead").append(
 			"	<td><strong><small>IdRequest</small></strong></td> \
-				<td><strong><small>Id</small></strong></td> \
+				<td><strong><small>IdRoomOrBedroom</small></strong></td> \
 				<td><strong><small>Usuario</small></strong></td>"
 		);
 		$("#requestsTable tbody").empty();
 		printConfirmedRequest();
 
 	});
+
+	$("#exitButton").click(function(){
+		var geting = $.get( "./api/?", {
+			action: "closeSession"
+		});
+
+		alert("Nos vemos...");
+		$(location).attr('href',"");
+
+	});
+
 
 }); 

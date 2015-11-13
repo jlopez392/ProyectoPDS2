@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	
+	var owner;
 	var rooms;
 	var bedrooms;
 	var last;
@@ -8,11 +9,25 @@ $(document).ready(function(){
 
 
 	$("#buttonRequestManagement").click(function(){
-		$(location).attr('href',"requestManagement.html");
+		$(location).attr('href',"requestManagement.php");
 	});
 
+
+	function getCurrentOwner(){
+		
+		var geting = $.get( "./api/?", {
+			action: "getCurrentOwner"
+		});
+
+		geting.done(function( data ) {
+			owner = data;
+		});
+	}
+
+	getCurrentOwner();
+
 	function printRooms(){
-		$.getJSON("./api/?action=getRooms", function( data ) {
+		$.getJSON("./api/?action=getRooms&ownerId="+owner, function( data ) {
 			rooms = data;
 			last = "room"
 			$.each(data, function( index, value ) {
@@ -29,7 +44,7 @@ $(document).ready(function(){
 	}
 
 	function printBedrooms(){
-		$.getJSON("./api/?action=getBedrooms", function( data ) {
+		$.getJSON("./api/?action=getBedrooms&ownerId="+owner, function( data ) {
 			bedrooms = data;
 			last = "Bedroom"
 			$.each(data, function( index, value ) {
@@ -107,18 +122,18 @@ $(document).ready(function(){
 		$("#rightPanel").empty();
 		$("#rightPanel").append(
 			'<div class="input-group"> \
-					<span class="input-group-addon" id="sizing-addon2"">Categoria</span> \
+					<span class="input-group-addon" id="sizing-addon2">Categoria</span> \
   					<select class="form-control" id="categoryField"> \
     					<option>Habitacion</option> \
     					<option>Salon</option> \
     				</select> \
 			</div> \
 			<br><div class="input-group"> \
-  				<span class="input-group-addon" id="sizing-addon2"">Zona</span> \
+  				<span class="input-group-addon" id="sizing-addon2">Zona</span> \
   				<input id="zoneField" type="text" class="form-control" aria-describedby="sizing-addon2"> \
   			</div> \
   			<br><div class="input-group"> \
-  				<span class="input-group-addon" id="sizing-addon2"">Precio</span> \
+  				<span class="input-group-addon" id="sizing-addon2">Precio</span> \
   				<input id="priceField" type="text" class="form-control" aria-describedby="sizing-addon2"> \
   			</div> \
   			<br><br><button id="addRoomOrBedroomButton" class="btn btn-default">Cargar datos</button>' 
@@ -146,6 +161,17 @@ $(document).ready(function(){
 		});
 	
 	});
+
+	$("#exitButton").click(function(){
+		var geting = $.get( "./api/?", {
+			action: "closeSession"
+		});
+
+		alert("Nos vemos...");
+		$(location).attr('href',"");
+
+	});
+
 
 
 }); 

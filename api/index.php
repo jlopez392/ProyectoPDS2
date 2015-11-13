@@ -3,6 +3,7 @@
 include ("persistentDataManager.php");
 
 $possible_url = [
+	"getCurrentOwner",
 	"getRooms",
     "getBedrooms",
     "getRoom",
@@ -11,6 +12,8 @@ $possible_url = [
     "getBedroomsRequests",
     "getConfirmedRequests",
     "validateUser",
+    "validateOwner",
+    "closeSession",
     "getUsers",
     "deleteRoom",
     "deleteBedroom",
@@ -57,6 +60,7 @@ if (isset($_GET["action"]) && in_array($_GET["action"], $possible_url)) {
 	$_GET["action"]();	
 	
 } else {
+	echo "<br><br><a href='./?action=getCurrentOwner'> getCurrentOwner IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=getRooms'> getRooms IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=getBedrooms'> getBedrooms IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=getRoom'> getRoom IMPLEMENTADOOOOOO </a>";
@@ -68,6 +72,8 @@ if (isset($_GET["action"]) && in_array($_GET["action"], $possible_url)) {
 	echo "<br><br><a href='./?action=deleteRoom'> deleteRoom IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=deleteBedroom'> deleteBedroom IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=validateUser'> validateUser IMPLEMENTADOOOOOO </a>";
+	echo "<br><br><a href='./?action=validateOwner'> validateOwner IMPLEMENTADOOOOOO </a>";
+	echo "<br><br><a href='./?action=closeSession'> closeSession IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=confirmRoomRequest'> confirmRoomRequest IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=confirmBedroomRequest'> confirmBedroomRequest IMPLEMENTADOOOOOO </a>";
 	
