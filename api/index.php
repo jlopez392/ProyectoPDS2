@@ -25,39 +25,9 @@ $possible_url = [
 	"addBedroomRequest"
     ];
 
-function addRoom() {
-	if (isset($_GET["zone"]) and isset($_GET["price"])){
-		echo "Se ha cargado el salon.\n";
-		echo "Zona: ".$_GET['zone']."\n";
-		echo "Precio: ".$_GET["price"]."\n";
-	}
-}
-
-function addBedroom() {
-	if (isset($_GET["zone"]) and isset($_GET["price"])){
-		echo "Se ha cargado la habitacion\n";
-		echo "Zona: ".$_GET['zone']."\n";
-		echo "Precio: ".$_GET["price"]."\n";
-	}
-}
-
-function addRoomRequest() {
-	if (isset($_GET["idToRequest"])){
-		echo "Se ha asentado la solicitud del salon ";
-		echo $_GET["idToRequest"];
-	}
-}
-
-function addBedroomRequest() {
-	if (isset($_GET["idToRequest"])){
-		echo "Se ha asentado la solicitud de la habitacion ";
-		echo $_GET["idToRequest"];
-	}
-}
-
 if (isset($_GET["action"]) && in_array($_GET["action"], $possible_url)) {
 	
-	$_GET["action"]();	
+	$_GET["action"]();
 	
 } else {
 	echo "<br><br><a href='./?action=getCurrentUser'> getCurrentUser IMPLEMENTADOOOOOO </a>";

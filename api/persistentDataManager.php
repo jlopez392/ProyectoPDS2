@@ -324,3 +324,74 @@ function confirmBedroomRequest(){
     $result = mysql_query($query);
     echo ($row = mysql_fetch_assoc($result))? 1: 0;
 }
+
+function addRoom() {
+    if ( !isset($_GET["zone"]) || !isset($_GET["price"]) || !isset($_GET["ownerId"]) )
+        exit(0);
+        
+    $zone = $_GET['zone'];
+    $price = $_GET["price"];
+    $ownerId = $_GET["ownerId"];
+
+    connectDatabase();        
+    $query = sprintf("  INSERT INTO room (`roomId`, `zone`, `price`, `ownerId`, `available`) 
+                        VALUES (NULL, '$zone', '$price', '$ownerId', '1')");
+
+    mysql_query($query);
+}
+
+function addBedroom() {
+    if ( !isset($_GET["zone"]) || !isset($_GET["price"]) || !isset($_GET["ownerId"]) )
+        exit(0);
+        
+    $zone = $_GET['zone'];
+    $price = $_GET["price"];
+    $ownerId = $_GET["ownerId"];
+
+    connectDatabase();        
+    $query = sprintf("  INSERT INTO bedroom (`bedroomId`, `zone`, `price`, `ownerId`, `available`) 
+                        VALUES (NULL, '$zone', '$price', '$ownerId', '1')");
+
+    mysql_query($query);
+}
+
+
+function addRoomRequest() {
+    if ( !isset($_GET["idToRequest"]) || !isset($_GET["userId"]) )
+        exit(0);
+    
+    $roomId = $_GET["idToRequest"];
+    $userId = $_GET["userId"];
+
+    if ( isset($_GET["advancePayment"]) )
+        echo "\nPago adelantado: ".$_GET["advancePayment"];
+
+
+    connectDatabase();        
+    $query = sprintf(
+        "   INSERT INTO roomRequest (`roomRequestId`, `roomId`, `userId`, `advancePayment`, `isConfirmed`) 
+            VALUES (NULL, '$roomId', '$userId', '0', '0');");
+
+    mysql_query($query);
+
+}
+
+function addBedroomRequest() {
+    if ( !isset($_GET["idToRequest"]) || !isset($_GET["userId"]) )
+        exit(0);
+    
+    $bedroomId = $_GET["idToRequest"];
+    $userId = $_GET["userId"];
+
+    if ( isset($_GET["advancePayment"]) )
+        echo "\nPago adelantado: ".$_GET["advancePayment"];
+
+
+    connectDatabase();        
+    $query = sprintf(
+        "   INSERT INTO bedroomRequest (`bedroomRequestId`, `bedroomId`, `userId`, `advancePayment`, `isConfirmed`) 
+            VALUES (NULL, '$bedroomId', '$userId', '0', '0');");
+
+    mysql_query($query);
+
+}

@@ -1,6 +1,20 @@
 $(document).ready(function(){
 	
 	var last;
+	var user;
+
+	function getCurrentUser(){
+		
+		var geting = $.get( "./api/?", {
+			action: "getCurrentUser"
+		});
+
+		geting.done(function( data ) {
+			user = data;
+		});
+	}
+
+	getCurrentUser();
 
 	function printRooms(){
 		$.getJSON("./api/?action=getRooms", function( data ) {
@@ -34,7 +48,7 @@ $(document).ready(function(){
 	}
 
 	$("#lookForRoomsButton").click(function(){
-		last = "room"
+		last = "room";
 		$("#roomsTable thead").empty();
 		$("#roomsTable thead").append(
 			"	<td><strong><small>Id</small></strong></td> \
@@ -47,7 +61,7 @@ $(document).ready(function(){
 	});
 
 	$("#lookForBedroomsButton").click(function(){
-		last = "bedroom"
+		last = "bedroom";
 		$("#roomsTable thead").empty();
 		$("#roomsTable thead").append(
 			"	<td><strong><small>Id</small></strong></td> \
@@ -66,11 +80,12 @@ $(document).ready(function(){
 
 		var geting = $.get( "./api/?", {
 			action: actionToGet, 
-			idToRequest: idToGet
+			idToRequest: idToGet,
+			userId: user
 		});
 
 		geting.done(function( data ) {
-			alert(data)
+			alert("Se ha realizado la solicitud");
 		});
 
 	});

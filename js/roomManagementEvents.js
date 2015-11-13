@@ -14,11 +14,9 @@ $(document).ready(function(){
 
 
 	function getCurrentUser(){
-		
-		var geting = $.get( "./api/?", {
+		var geting = $.get( "./api/?", { 
 			action: "getCurrentUser"
 		});
-
 		geting.done(function( data ) {
 			owner = data;
 		});
@@ -29,7 +27,7 @@ $(document).ready(function(){
 	function printRooms(){
 		$.getJSON("./api/?action=getRooms&ownerId="+owner, function( data ) {
 			rooms = data;
-			last = "room"
+			last = "room";
 			$.each(data, function( index, value ) {
 				$("#roomsTable tbody").append(
 					"<tr> \
@@ -46,7 +44,7 @@ $(document).ready(function(){
 	function printBedrooms(){
 		$.getJSON("./api/?action=getBedrooms&ownerId="+owner, function( data ) {
 			bedrooms = data;
-			last = "Bedroom"
+			last = "bedroom";
 			$.each(data, function( index, value ) {
 				$("#roomsTable tbody").append(
 					"<tr> \
@@ -85,16 +83,25 @@ $(document).ready(function(){
 	});
 
 	$("#roomsTable").on("click",".selectButton", function(){
-		item = (rooms[$(this).text()])? rooms : bedrooms;
 		$("#rightPanel").empty();
-		$("#rightPanel").append(
+		
+		category = last;
+		url = "./api/?action=";
+		url += (category == "room")? "getRoom":"getBedroom";
+		id = $(this).text(); 
+		url += "&id="+id;
+
+		$.getJSON(url , function( data ) {
+			$("#rightPanel").append(
 "<ul class='list-group'> \
-	<li class='list-group-item'><span class='input-group-addon'>Categoria</span> "+last+"</li> \
-	<li class='list-group-item'><span class='input-group-addon'>Id</span>"+$(this).text()+"</li> \
-	<li class='list-group-item'><span class='input-group-addon'>Zona</span>"+item[$(this).text()]['zone']+"</li> \
-	<li class='list-group-item'><span class='input-group-addon'>Precio</span>"+item[$(this).text()]['price']+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>Categoria: </span>"+category+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>Id: </span>"+id+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>Zona: </span>"+data[id]['zone']+"</li> \
+	<li class='list-group-item'><span class='input-group-addon'>Precio: </span>"+data[id]['price']+"</li> \
 </ul>" 
+
 			);
+		});	
 	});
 
 	$("#roomsTable").on("click",".deleteButton", function(){
@@ -143,6 +150,10 @@ $(document).ready(function(){
 	/*Hacer un post a la api que se encarga de guardar los datos*/
 	$("#rightPanel").on("click","#addRoomOrBedroomButton", function(){
 		
+		//Desactivo boton para evitar doble envio
+		$("#buttonABM").attr("disabled", true);
+
+
 		category = $("#categoryField").val();
 		zoneToSend = $("#zoneField").val();
 		priceToSend = $("#priceField").val();
@@ -153,13 +164,17 @@ $(document).ready(function(){
 		var geting = $.get( "./api/?", {
 			action: actionToGet, 
 			zone:zoneToSend, 
-			price:priceToSend
+			price:priceToSend,
+			ownerId:owner
 		});
 
 		geting.done(function( data ) {
-			alert(data)
+			alert("Cargada exitosamente");
 		});
 	
+		//Reactivo nuevamente
+		$("#buttonABM").attr("disabled", false);
+
 	});
 
 	$("#exitButton").click(function(){
