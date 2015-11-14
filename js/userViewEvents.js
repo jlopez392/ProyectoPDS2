@@ -1,105 +1,113 @@
-$(document).ready(function(){
+var user;
+var last;
+
+
+function getCurrentUser(){
+	var geting = $.get( "./api/?", {
+		action: "getCurrentUser"
+	});
+
+	geting.done(function( data ) {
+		user = data;
+	});
+}
+
+
+function printRooms(){
+	$.getJSON("./api/?action=getRooms", function( data ) {
+		$.each(data, function( index, value ) {
+			$("#roomsTable tbody").append(
+				"<tr> \
+					<td><small>"+index+"</small></td> \
+			  		<td><small>"+value["zone"]+"</small></td> \
+			  		<td><small>"+value["price"]+"</small></td> \
+			  		<td><button id="+index+" class='requestButton btn'>Solicitar</btn></td> \
+		  		</tr>"
+			);
 	
-	var last;
-	var user;
+			var geting = $.get( "./api/?", {
+				action: "existsRoomRequest",
+				roomId:index,
+				userId:user
+			});
 
-	function getCurrentUser(){
-		
-		var geting = $.get( "./api/?", {
-			action: "getCurrentUser"
+			geting.done(function( data ) {
+				if (data == 1)
+					$("#"+index).addClass("alredyRequested");
+			});
+			
 		});
+	});
+}
 
-		geting.done(function( data ) {
-			user = data;
+function printBedrooms(){
+	$.getJSON("./api/?action=getBedrooms", function( data ) {
+		bedrooms = data;
+		$.each(data, function( index, value ) {
+			$("#roomsTable tbody").append(
+				"<tr> \
+					<td><small>"+index+"</small></td> \
+			  		<td><small>"+value["zone"]+"</small></td> \
+			  		<td><small>"+value["price"]+"</small></td> \
+			  		<td><button id="+index+" class='requestButton btn'>Solicitar</btn></td> \
+		  		</tr>"
+			);
+			
+			var geting = $.get( "./api/?", {
+				action: "existsBedroomRequest",
+				bedroomId:index,
+				userId:user
+			});
+
+			geting.done(function( data ) {
+				if (data == 1)
+					$("#"+index).addClass("alredyRequested");
+			});
+				
 		});
-	}
+	});
+}
+
+
+function printTableHead(){
+	id = (last == "room")?"idSalon":"idHabitacion"; 
+	$("#roomsTable thead").empty();
+	$("#roomsTable thead").append(
+		"	<td><strong><small>"+id+"</small></strong></td> \
+			<td><strong><small>Zona</small></strong></td> \
+			<td><strong><small>Precio</small></strong></td> \
+			<td><strong><small>Solicitar</small></strong></td> "
+	);
+	$("#roomsTable tbody").empty();
+
+}
+
+
+$(document).ready(function(){
 
 	getCurrentUser();
 
 
-	function printRooms(){
-		$.getJSON("./api/?action=getRooms", function( data ) {
-			$.each(data, function( index, value ) {
-				$("#roomsTable tbody").append(
-					"<tr> \
-						<td><small>"+index+"</small></td> \
-				  		<td><small>"+value["zone"]+"</small></td> \
-				  		<td><small>"+value["price"]+"</small></td> \
-				  		<td><button id="+index+" class='requestButton btn'>Solicitar</btn></td> \
-			  		</tr>"
-				);
-
-					
-				var geting = $.get( "./api/?", {
-					action: "existsRoomRequest",
-					roomId:index,
-					userId:user
-				});
-
-				geting.done(function( data ) {
-					if (data == 1)
-						$("#"+index).addClass("alredyRequested");
-				});
-				
-			});
-		});
-	}
-
-	function printBedrooms(){
-		$.getJSON("./api/?action=getBedrooms", function( data ) {
-			bedrooms = data;
-			$.each(data, function( index, value ) {
-				$("#roomsTable tbody").append(
-					"<tr> \
-						<td><small>"+index+"</small></td> \
-				  		<td><small>"+value["zone"]+"</small></td> \
-				  		<td><small>"+value["price"]+"</small></td> \
-				  		<td><button id="+index+" class='requestButton btn'>Solicitar</btn></td> \
-			  		</tr>"
-				);
-			
-				var geting = $.get( "./api/?", {
-					action: "existsBedroomRequest",
-					bedroomId:index,
-					userId:user
-				});
-
-				geting.done(function( data ) {
-					if (data == 1)
-						$("#"+index).addClass("alredyRequested");
-				});
-				
-			});
-		});
-	}
-
 	$("#lookForRoomsButton").click(function(){
 		last = "room";
-		$("#roomsTable thead").empty();
-		$("#roomsTable thead").append(
-			"	<td><strong><small>Id</small></strong></td> \
-				<td><strong><small>Zona</small></strong></td> \
-				<td><strong><small>Precio</small></strong></td> \
-				<td><strong><small>Solicitar</small></strong></td> "
-		);
-		$("#roomsTable tbody").empty();
+		printTableHead();
 		printRooms();
 	});
 
+
 	$("#lookForBedroomsButton").click(function(){
 		last = "bedroom";
-		$("#roomsTable thead").empty();
-		$("#roomsTable thead").append(
-			"	<td><strong><small>Id</small></strong></td> \
-				<td><strong><small>Zona</small></strong></td> \
-				<td><strong><small>Precio</small></strong></td> \
-				<td><strong><small>Solicitar</small></strong></td> "
-		);
-		$("#roomsTable tbody").empty();
+		printTableHead();
 		printBedrooms();
 	});
 
+
 	$("#roomsTable").on("click",".requestButton", function(){
+
+		if($(this).hasClass("alredyRequested")){
+			alert("Alredy Requested");
+			return 0;
+		}	
 
 		actionToGet = (last == "room")?"addRoomRequest":"addBedroomRequest";
 		idToGet = $(this).attr("id");
@@ -116,8 +124,8 @@ $(document).ready(function(){
 				$("#lookForRoomsButton").click();
 			$("#lookForBedroomsButton").click();
 		});
-
 	});
+
 
 	$("#exitButton").click(function(){
 		var geting = $.get( "./api/?", {
@@ -126,7 +134,6 @@ $(document).ready(function(){
 
 		alert("Nos vemos...");
 		$(location).attr('href',"");
-
 	});
 
 

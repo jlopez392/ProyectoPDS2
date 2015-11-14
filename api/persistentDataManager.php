@@ -9,11 +9,13 @@ function connectDatabase() {
                 or die('No se pudo seleccionar la base de datos');
 }
 
+
 /*Funcion que devuelve el id del usuario actual*/
 function getCurrentUser(){
     session_start();
     echo $_SESSION['username'];
 }
+
 
 /*Funcion que devuelve un json con todas los salones disponibles.
     Funciona de dos maneras.
@@ -34,8 +36,8 @@ function getRooms() {
             "ownerId" => $row['ownerId']];
         
     echo json_encode($value);
-        
 }
+
 
 /*Funcion que devuelve un json con todas las habitaciones disponibles.
     Funciona de dos maneras.
@@ -58,8 +60,8 @@ function getBedrooms() {
             "ownerId" => $row['ownerId']];
         
     echo json_encode($value);
-        
 }
+
 
 /*Funcion que devuelve un json con unicamente el salon correspondiente al id pasado por parametro*/
 function getRoom() {
@@ -74,9 +76,9 @@ function getRoom() {
             "price" => $row['price'],
             "ownerId" => $row['ownerId']];
         
-    echo json_encode($value);
-        
+    echo json_encode($value);      
 }
+
 
 /*Funcion que devuelve un json con unicamente la habitacion correspondiente al id pasado por parametro*/
 function getBedroom() {
@@ -92,9 +94,9 @@ function getBedroom() {
             "price" => $row['price'],
             "ownerId" => $row['ownerId']];
         
-    echo json_encode($value);
-        
+    echo json_encode($value);        
 }
+
 
 /*Funcion que devuelve un json con la lista de todos los usuarios de la base de datos.SOLO DATOS PUBLICOS*/
 function getUsers() {
@@ -108,9 +110,9 @@ function getUsers() {
         	"lastname" => $row['lastname'],
             "numberPhone" => $row['numberPhone']];
         
-    echo json_encode($value);
-        
+    echo json_encode($value);        
 }
+
 
 /*Funcion que devuelve un json con el usuario solicitado de la base de datos.SOLO DATOS PUBLICOS*/
 function getUser() {
@@ -125,9 +127,9 @@ function getUser() {
             "lastname" => $row['lastname'],
             "numberPhone" => $row['numberPhone']];
         
-    echo json_encode($value);
-        
+    echo json_encode($value);        
 }
+
 
 /*Funcion que devuelve todas las solicitudes de reserva de salones en un json. Se le debe pasar por parametro
 el id del owner, para realizar el filtro.*/
@@ -153,9 +155,9 @@ function getRoomsRequests() {
             "advancePayment" => $row['advancePayment'],
             "category" => "room"];
         
-    echo json_encode($value);
-        
+    echo json_encode($value);        
 }
+
 
 /*Funcion que devuelve todas las solicitudes de reserva de habitaciones en un json. Se le debe pasar por parametro
 el id del owner, para realizar el filtro.*/
@@ -180,8 +182,7 @@ function getBedroomsRequests() {
             "advancePayment" => $row['advancePayment'],
             "category" => "bedroom"];
         
-    echo json_encode($value);
-        
+    echo json_encode($value);        
 }
 
 
@@ -200,11 +201,15 @@ function getConfirmedRequests() {
                                 AND rq.isConfirmed = 1
                                 AND r.ownerId = '$ownerId'");
 
+        $query2 .= isset($_GET["idRequest"])? "AND rq.roomRequestId = ".$_GET["idRequest"]:"";
+
         $query1 = sprintf(" SELECT bq.bedroomRequestId, bq.bedroomId, bq.userId, bq.advancePayment 
                             FROM bedroomRequest bq, bedroom b
                             wHERE bq.bedroomId = b.bedroomId
                                 AND bq.isConfirmed = 1
                                 AND b.ownerId = '$ownerId'");
+
+        $query1 .= isset($_GET["idRequest"])? "AND bq.bedroomRequestId = ".$_GET["idRequest"]:"";
     }
 
 
@@ -225,8 +230,7 @@ function getConfirmedRequests() {
             "advancePayment" => $row['advancePayment'],
             "category" => "room"];
         
-    echo json_encode($value);
-        
+    echo json_encode($value);        
 }
 
 
@@ -278,6 +282,7 @@ function validateUser(){
     $_SESSION['username'] = $username;
 }
 
+
 /*Funcion que recibe usuario y clave de un owner, y los compara en la base de datos para ver si son validos.*/
 function validateOwner(){
 
@@ -300,8 +305,8 @@ function validateOwner(){
     $_SESSION['active'] = 1;
     $_SESSION['type'] = "owner";
     $_SESSION['username'] = $username;
-
 }
+
 
 /*Funcion que cierra la sesion*/
 function closeSession(){
@@ -326,6 +331,7 @@ function confirmRoomRequest(){
     echo ($row = mysql_fetch_assoc($result))? 1: 0;
 }
 
+
 /*Funcion que confirma solicitudes de habitacion*/
 function confirmBedroomRequest(){
 	isset($_GET["idToConfirm"])? $id = $_GET["idToConfirm"]: exit("Parameter is missing");
@@ -341,6 +347,7 @@ function confirmBedroomRequest(){
     echo ($row = mysql_fetch_assoc($result))? 1: 0;
 }
 
+
 function addRoom() {
     if ( !isset($_GET["zone"]) || !isset($_GET["price"]) || !isset($_GET["ownerId"]) )
         exit(0);
@@ -355,6 +362,7 @@ function addRoom() {
 
     mysql_query($query);
 }
+
 
 function addBedroom() {
     if ( !isset($_GET["zone"]) || !isset($_GET["price"]) || !isset($_GET["ownerId"]) )
@@ -389,8 +397,8 @@ function addRoomRequest() {
             VALUES (NULL, '$roomId', '$userId', '0', '0');");
 
     mysql_query($query);
-
 }
+
 
 function addBedroomRequest() {
     if ( !isset($_GET["idToRequest"]) || !isset($_GET["userId"]) )
@@ -409,8 +417,8 @@ function addBedroomRequest() {
             VALUES (NULL, '$bedroomId', '$userId', '0', '0');");
 
     mysql_query($query);
-
 }
+
 
 function existsRoomRequest(){
     if ( !isset($_GET["roomId"]) || !isset($_GET["userId"]) )
@@ -429,6 +437,7 @@ function existsRoomRequest(){
 
     echo ($row = mysql_fetch_assoc($result))? 1: 0;
 }
+
 
 function existsBedroomRequest(){
     if ( !isset($_GET["bedroomId"]) || !isset($_GET["userId"]) )

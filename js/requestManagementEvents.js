@@ -1,8 +1,8 @@
 var owner;
 var last;
 
+
 function getCurrentUser(){
-		
 	var geting = $.get( "./api/?", {
 		action: "getCurrentUser"
 	});
@@ -11,6 +11,7 @@ function getCurrentUser(){
 		owner = data;
 	});
 }
+
 
 function printRoomRequest(){
 	$.getJSON("./api/?action=getRoomsRequests&ownerId="+owner, function( data ) {
@@ -30,6 +31,7 @@ function printRoomRequest(){
 	});
 }
 
+
 function printBedroomRequest(){
 	$.getJSON("./api/?action=getBedroomsRequests&ownerId="+owner, function( data ) {
 		$.each(data, function( index, value ) {
@@ -48,6 +50,7 @@ function printBedroomRequest(){
 	});
 }
 
+
 function printConfirmedRequest(){
 	$.getJSON("./api/?action=getConfirmedRequests&ownerId="+owner, function( data ) {
 		$.each(data, function( index, value ) {
@@ -63,6 +66,7 @@ function printConfirmedRequest(){
 	});
 }
 
+
 function printTableHead(){
 	id = (last == "room")?"idSalon":"idHabitacion"; 
 	$("#requestsTable thead").empty();
@@ -75,6 +79,7 @@ function printTableHead(){
 	);
 	$("#requestsTable tbody").empty();
 }
+
 
 function appendIntoRightPanel(values){
 	$("#rightPanel").empty();
@@ -89,21 +94,25 @@ function appendIntoRightPanel(values){
 	$("#rightPanel").append(generatedStringToAppend);
 }
 
+
 $(document).ready(function(){
 
 	getCurrentUser();
 
 	$("#buttonRequestManagement").attr("disabled", true);
 
+
 	$("#buttonABM").click(function(){
 		$(location).attr('href',"roomManagement.php");
 	});
+
 
 	$("#roomRequestButton").click(function(){
 		last = "room";
 		printTableHead();
 		printRoomRequest();
 	});
+
 
 	$("#bedroomRequestButton").click(function(){
 		last = "bedroom";
@@ -126,14 +135,15 @@ $(document).ready(function(){
 				"Category": category,
 				"Zone": data[id]["zone"],
 				"Price": data[id]["price"]
-				});
+			});
 		});	
 	});
+
 
 	$("#requestsTable").on("click",".confirmButton", function(){
 		
 		idToSend = $(this).attr("id");
-		actionToGet = 	(last == "room")? "confirmRoomRequest":"confirmBedroomRequest";
+		actionToGet = (last == "room")? "confirmRoomRequest":"confirmBedroomRequest";
 
 		var geting = $.get( "./api/?", {
 			action: actionToGet, 
@@ -144,9 +154,13 @@ $(document).ready(function(){
 			alert("Solicitud confirmada");
 		});
 
-		(last == "room")? $("#roomRequestButton").click() : $("#bedroomRequestButton").click();
+		if (last == "room")
+			$("#roomRequestButton").click();
+
+		$("#bedroomRequestButton").click();
 
 	});
+
 
 	$("#requestsTable").on("click",".showUserButton", function(){
 		username = $(this).text() 
@@ -158,29 +172,25 @@ $(document).ready(function(){
 				"Name": data[username]["name"],
 				"Last name": data[username]["lastname"],
 				"Phone Number": data[username]["numberPhone"]
-				});	
+			});	
 		});
-
 	});
 
 
 	$("#requestsTable").on("click",".showRequestDetailsButton", function(){
 		$("#rightPanel").empty();
 		idRequest = $(this).text() 
-		$.getJSON("./api/?action=getConfirmedRequests&ownerId="+owner, function(data) {
-			requestFound = data.hasOwnProperty(idRequest);
-			if (requestFound){
-				advancePayment = (data[idRequest]["advancePayment"]!=0)?"Si":"No";
-				$("#rightPanel").append(
-			
-"<ul class='list-group'> \
-	<li class='list-group-item'><span class='input-group-addon'>id solicitud:</span> "+idRequest+"</li> \
-	<li class='list-group-item'><span class='input-group-addon'>id salon o habitacion: </span>"+data[idRequest]["id"]+"</li> \
-	<li class='list-group-item'><span class='input-group-addon'>Usuario: </span>"+data[idRequest]["user"]+"</li> \
-	<li class='list-group-item'><span class='input-group-addon'>Pago adelantado: </span>"+advancePayment+"</li> \
-</ul>" 
-				);
-			}
+		url = "./api/?action=getConfirmedRequests&ownerId="+owner+"&idRequest="+idRequest; 
+		
+		$.getJSON(url, function(data) {
+			advancePayment = (data[idRequest]["advancePayment"]!=0)?"Si":"No";
+
+			appendIntoRightPanel({
+				"Id Request": idRequest,
+				"Id Room/Bedroom": data[idRequest]["id"],
+				"User": data[idRequest]["user"],
+				"Advance Payment": advancePayment
+			});	
 		});
 	});
 
@@ -193,8 +203,9 @@ $(document).ready(function(){
 		);
 		$("#requestsTable tbody").empty();
 		printConfirmedRequest();
-
 	});
+
+
 
 	$("#exitButton").click(function(){
 		var geting = $.get( "./api/?", {
@@ -203,7 +214,6 @@ $(document).ready(function(){
 
 		alert("Nos vemos...");
 		$(location).attr('href',"");
-
 	});
 
 

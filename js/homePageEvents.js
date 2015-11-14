@@ -1,11 +1,12 @@
 $(document).ready(function(){
 
+
 	$(".loginButton").click(function(){
 
 		userToSend = $("#usernameField").val();
 		passwordToSend = $("#passwordField").val();
 		
-		isUser = $(this).val() == "user"; //Si no es user, es owner
+		isUser = $(this).val() == "user";
 		actionToGet = isUser ?"validateUser": "validateOwner";
 
 		var geting = $.get( "./api/?", {
@@ -19,10 +20,12 @@ $(document).ready(function(){
 				urlToRedirect = isUser? "userView.php":"roomManagement.php";
 				alert("Wellcome");
 				$(location).attr('href',urlToRedirect);
-			} else {
-				alert("Wrong user or password");
 			}
-
+			
+			alert("Wrong user or password");
 		});
+
 	});
+
+
 });
