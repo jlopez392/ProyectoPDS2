@@ -15,6 +15,7 @@ $possible_url = [
     "validateOwner",
     "closeSession",
     "getUsers",
+    "getUser",
     "deleteRoom",
     "deleteBedroom",
     "confirmRoomRequest",
@@ -22,7 +23,9 @@ $possible_url = [
     "addRoom",
 	"addBedroom",
     "addRoomRequest",
-	"addBedroomRequest"
+	"addBedroomRequest",
+	"existsRoomRequest",
+	"existsBedroomRequest"
     ];
 
 if (isset($_GET["action"]) && in_array($_GET["action"], $possible_url)) {
@@ -39,6 +42,7 @@ if (isset($_GET["action"]) && in_array($_GET["action"], $possible_url)) {
 	echo "<br><br><a href='./?action=getBedroomsRequests'> getBedroomsRequests  IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=getConfirmedRequests'> getConfirmedRequests IMPLEMENTADOOOOOO  </a>";
 	echo "<br><br><a href='./?action=getUsers'> getUsers IMPLEMENTADOOOOOO </a>";
+	echo "<br><br><a href='./?action=getUser'> getUser IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=deleteRoom'> deleteRoom IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=deleteBedroom'> deleteBedroom IMPLEMENTADOOOOOO </a>";
 	echo "<br><br><a href='./?action=validateUser'> validateUser IMPLEMENTADOOOOOO </a>";

@@ -6,3 +6,7 @@
 #roomsTable{
 	text-align: center;
 }
+
+.alredyRequested{
+	background-color:rgba(0,0,0,0.6);
+}

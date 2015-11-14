@@ -16,6 +16,7 @@ $(document).ready(function(){
 
 	getCurrentUser();
 
+
 	function printRooms(){
 		$.getJSON("./api/?action=getRooms", function( data ) {
 			$.each(data, function( index, value ) {
@@ -27,6 +28,19 @@ $(document).ready(function(){
 				  		<td><button id="+index+" class='requestButton btn'>Solicitar</btn></td> \
 			  		</tr>"
 				);
+
+					
+				var geting = $.get( "./api/?", {
+					action: "existsRoomRequest",
+					roomId:index,
+					userId:user
+				});
+
+				geting.done(function( data ) {
+					if (data == 1)
+						$("#"+index).addClass("alredyRequested");
+				});
+				
 			});
 		});
 	}
@@ -43,6 +57,18 @@ $(document).ready(function(){
 				  		<td><button id="+index+" class='requestButton btn'>Solicitar</btn></td> \
 			  		</tr>"
 				);
+			
+				var geting = $.get( "./api/?", {
+					action: "existsBedroomRequest",
+					bedroomId:index,
+					userId:user
+				});
+
+				geting.done(function( data ) {
+					if (data == 1)
+						$("#"+index).addClass("alredyRequested");
+				});
+				
 			});
 		});
 	}
@@ -86,6 +112,9 @@ $(document).ready(function(){
 
 		geting.done(function( data ) {
 			alert("Se ha realizado la solicitud");
+			if (last == 'room')
+				$("#lookForRoomsButton").click();
+			$("#lookForBedroomsButton").click();
 		});
 
 	});
