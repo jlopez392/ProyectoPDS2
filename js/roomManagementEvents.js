@@ -67,7 +67,7 @@ function appendIntoRightPanel(values){
 		generatedStringToAppend += value;
 		generatedStringToAppend += "</li>";
 	});
-	generatedStringToAppend += "</ul";
+	generatedStringToAppend += "</ul>";
 	$("#rightPanel").append(generatedStringToAppend);
 }
 

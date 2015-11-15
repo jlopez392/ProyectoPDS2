@@ -1,7 +1,7 @@
 <?php
 		session_start();
 		if ($_SESSION['active'] != 1 || $_SESSION['type'] != "owner")
-    		header("Location:homePage.html");
+    		header("Location:../");
 
 ?>
 

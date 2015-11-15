@@ -2,18 +2,22 @@
 
 /*Funcion que realiza la conexión a la base de datos.*/
 function connectDatabase() {
+
 	$localhost = ['localhost', 'PDS2ProyectDB', 'root', 'abcd'];
    	$link = mysql_connect($localhost[0], $localhost[2], $localhost[3])
                 or die('Coneccion fallida: ' . mysql_error());
 	 		mysql_select_db($localhost[1])
                 or die('No se pudo seleccionar la base de datos');
+
 }
 
 
 /*Funcion que devuelve el id del usuario actual*/
 function getCurrentUser(){
+
     session_start();
     echo $_SESSION['username'];
+
 }
 
 
@@ -24,6 +28,7 @@ function getCurrentUser(){
     correspondientes a ese owner.
 */
 function getRooms() {
+
 	connectDatabase();        
     $query = sprintf("SELECT * FROM room WHERE available = 1");
     $query .= (isset($_GET["ownerId"]))? " AND ownerId = '".$_GET["ownerId"]."'" : "";
@@ -33,9 +38,24 @@ function getRooms() {
         $value[$row['roomId']] = [
          	"zone" => $row['zone'],
             "price" => $row['price'],
-            "ownerId" => $row['ownerId']];
-        
+            "ownerId" => $row['ownerId'],
+            "requested" => 0];
+    
+    if ( isset($_GET["userId"]) ){
+        $user = $_GET["userId"];
+        $query1 = " SELECT rr.roomId
+                    FROM roomRequest rr, room r,user u
+                    WHERE u.username = rr.userId
+                        AND u.username='$user'
+                        AND rr.roomId = r.roomId
+                        AND r.available = 1";
+        $result = mysql_query($query1);
+        while ($row = mysql_fetch_assoc($result))
+            $value[$row['roomId']]["requested"] = 1;
+    }
+
     echo json_encode($value);
+
 }
 
 
@@ -46,25 +66,40 @@ function getRooms() {
     correspondientes a ese owner.
 */
 function getBedrooms() {
+
     connectDatabase();        
     $query = sprintf("SELECT * FROM bedroom WHERE available = 1");
     $query .= (isset($_GET["ownerId"]))? " AND ownerId = '".$_GET["ownerId"]."'" : "";
-    
-
     $result = mysql_query($query);
-
+    
     while ($row = mysql_fetch_assoc($result))
         $value[$row['bedroomId']] = [
          	"zone" => $row['zone'],
             "price" => $row['price'],
-            "ownerId" => $row['ownerId']];
-        
+            "ownerId" => $row['ownerId'],
+            "requested" => 0];
+    
+    if ( isset($_GET["userId"]) ){
+        $user = $_GET["userId"];
+        $query1 = " SELECT br.bedroomId
+                    FROM bedroomRequest br,bedroom b,user u
+                    WHERE u.username = br.userId
+                        AND u.username='$user'
+                        AND br.bedroomId = b.bedroomId
+                        AND b.available = 1";
+        $result = mysql_query($query1);
+        while ($row = mysql_fetch_assoc($result))
+            $value[$row['bedroomId']]["requested"] = 1;
+    }
+    
     echo json_encode($value);
+
 }
 
 
 /*Funcion que devuelve un json con unicamente el salon correspondiente al id pasado por parametro*/
 function getRoom() {
+
 	$id = (isset($_GET["id"]))? $_GET["id"] : exit();
     connectDatabase();        
     $query = sprintf("SELECT * FROM room WHERE roomId = '$id'");
@@ -77,11 +112,13 @@ function getRoom() {
             "ownerId" => $row['ownerId']];
         
     echo json_encode($value);      
+
 }
 
 
 /*Funcion que devuelve un json con unicamente la habitacion correspondiente al id pasado por parametro*/
 function getBedroom() {
+
 	$id = (isset($_GET["id"]))? $_GET["id"] : exit();
     connectDatabase();        
     $query = sprintf("SELECT * FROM bedroom WHERE bedroomId = '$id'");
@@ -95,11 +132,13 @@ function getBedroom() {
             "ownerId" => $row['ownerId']];
         
     echo json_encode($value);        
+
 }
 
 
 /*Funcion que devuelve un json con la lista de todos los usuarios de la base de datos.SOLO DATOS PUBLICOS*/
 function getUsers() {
+
     connectDatabase();        
     $query = sprintf("SELECT username, name, lastname, numberPhone FROM user");
     $result = mysql_query($query);
@@ -111,11 +150,13 @@ function getUsers() {
             "numberPhone" => $row['numberPhone']];
         
     echo json_encode($value);        
+
 }
 
 
 /*Funcion que devuelve un json con el usuario solicitado de la base de datos.SOLO DATOS PUBLICOS*/
 function getUser() {
+
     $username = (isset($_GET["username"]))? $_GET["username"] : exit();
     connectDatabase();        
     $query = sprintf("SELECT username, name, lastname, numberPhone FROM user WHERE username='$username'");
@@ -128,12 +169,54 @@ function getUser() {
             "numberPhone" => $row['numberPhone']];
         
     echo json_encode($value);        
+
+}
+
+function existsRoomRequest(){
+
+    if ( !isset($_GET["roomId"]) || !isset($_GET["userId"]) )
+        exit(0);
+
+    $roomId = $_GET["roomId"];
+    $userId = $_GET["userId"];
+
+    connectDatabase();        
+    $query = "  SELECT *
+                FROM roomRequest
+                WHERE roomId = $roomId AND userId = '$userId'";
+
+    $result = mysql_query($query);
+
+    echo ($row = mysql_fetch_assoc($result))? 1: 0;
+
+}
+
+
+function existsBedroomRequest(){
+
+    if ( !isset($_GET["bedroomId"]) || !isset($_GET["userId"]) )
+        exit(0);
+
+    $bedroomId = $_GET["bedroomId"];
+    $userId = $_GET["userId"];
+
+
+    connectDatabase();        
+    $query = "  SELECT *
+                FROM bedroomRequest
+                WHERE bedroomId = $bedroomId AND userId = '$userId'";
+
+    $result = mysql_query($query);
+
+    echo ($row = mysql_fetch_assoc($result))? 1: 0;
+
 }
 
 
 /*Funcion que devuelve todas las solicitudes de reserva de salones en un json. Se le debe pasar por parametro
 el id del owner, para realizar el filtro.*/
 function getRoomsRequests() {
+
     connectDatabase();        
 
     if (isset($_GET["ownerId"])){
@@ -156,12 +239,14 @@ function getRoomsRequests() {
             "category" => "room"];
         
     echo json_encode($value);        
+
 }
 
 
 /*Funcion que devuelve todas las solicitudes de reserva de habitaciones en un json. Se le debe pasar por parametro
 el id del owner, para realizar el filtro.*/
 function getBedroomsRequests() {
+
     connectDatabase();        
 
     if (isset($_GET["ownerId"])){
@@ -183,14 +268,15 @@ function getBedroomsRequests() {
             "category" => "bedroom"];
         
     echo json_encode($value);        
+
 }
 
 
 /*Funcion que devuelve todas las solicitudes de reserva confirmadas. Se le debe pasar por parametro
 el id del owner, para realizar el filtro.*/
 function getConfirmedRequests() {
-    connectDatabase();        
-    
+
+    connectDatabase();         
 
     if (isset($_GET["ownerId"])){
         $ownerId = $_GET["ownerId"];
@@ -231,11 +317,13 @@ function getConfirmedRequests() {
             "category" => "room"];
         
     echo json_encode($value);        
+
 }
 
 
 /*Funcion de borra un salon. Necesita que se le pase el id del objeto a borrar*/
 function deleteRoom(){
+
 	isset($_GET["idToDelete"])? $id = $_GET["idToDelete"]: exit(); 
 	
 	connectDatabase();        
@@ -243,11 +331,13 @@ function deleteRoom(){
     $result = mysql_query($query);
     
     echo "Se ha borrado con exito el elemento";
+
 }
 
 
 /*Funcion que borra una habitacion. Necesita que se le pase el id del objeto a borrar*/
 function deleteBedroom(){
+
 	isset($_GET["idToDelete"])? $id = $_GET["idToDelete"]: exit("Parameter is missing"); 
 	
 	connectDatabase();        
@@ -255,6 +345,7 @@ function deleteBedroom(){
     mysql_query($query);
     
     echo "Se ha borrado con exito el elemento";
+
 }
 
 
@@ -280,6 +371,7 @@ function validateUser(){
     $_SESSION['active'] = 1;
     $_SESSION['type'] = "user";
     $_SESSION['username'] = $username;
+
 }
 
 
@@ -305,13 +397,16 @@ function validateOwner(){
     $_SESSION['active'] = 1;
     $_SESSION['type'] = "owner";
     $_SESSION['username'] = $username;
+
 }
 
 
 /*Funcion que cierra la sesion*/
 function closeSession(){
+
     session_start();
     $_SESSION['active'] = 0;
+
 }
 
 
@@ -319,6 +414,7 @@ function closeSession(){
 
 /*Funcion que confirma solicitudes de salon*/
 function confirmRoomRequest(){
+
 	isset($_GET["idToConfirm"])? $id = $_GET["idToConfirm"]: exit("Parameter is missing");
 
 	connectDatabase();        
@@ -329,11 +425,13 @@ function confirmRoomRequest(){
                             AND r.available = 1");
     $result = mysql_query($query);
     echo ($row = mysql_fetch_assoc($result))? 1: 0;
+
 }
 
 
 /*Funcion que confirma solicitudes de habitacion*/
 function confirmBedroomRequest(){
+
 	isset($_GET["idToConfirm"])? $id = $_GET["idToConfirm"]: exit("Parameter is missing");
 
 	connectDatabase();        
@@ -345,10 +443,12 @@ function confirmBedroomRequest(){
 
     $result = mysql_query($query);
     echo ($row = mysql_fetch_assoc($result))? 1: 0;
+
 }
 
 
 function addRoom() {
+
     if ( !isset($_GET["zone"]) || !isset($_GET["price"]) || !isset($_GET["ownerId"]) )
         exit(0);
         
@@ -361,10 +461,12 @@ function addRoom() {
                         VALUES (NULL, '$zone', '$price', '$ownerId', '1')");
 
     mysql_query($query);
+
 }
 
 
 function addBedroom() {
+
     if ( !isset($_GET["zone"]) || !isset($_GET["price"]) || !isset($_GET["ownerId"]) )
         exit(0);
         
@@ -377,10 +479,12 @@ function addBedroom() {
                         VALUES (NULL, '$zone', '$price', '$ownerId', '1')");
 
     mysql_query($query);
+
 }
 
 
 function addRoomRequest() {
+
     if ( !isset($_GET["idToRequest"]) || !isset($_GET["userId"]) )
         exit(0);
     
@@ -397,10 +501,12 @@ function addRoomRequest() {
             VALUES (NULL, '$roomId', '$userId', '0', '0');");
 
     mysql_query($query);
+
 }
 
 
 function addBedroomRequest() {
+
     if ( !isset($_GET["idToRequest"]) || !isset($_GET["userId"]) )
         exit(0);
     
@@ -417,42 +523,5 @@ function addBedroomRequest() {
             VALUES (NULL, '$bedroomId', '$userId', '0', '0');");
 
     mysql_query($query);
-}
 
-
-function existsRoomRequest(){
-    if ( !isset($_GET["roomId"]) || !isset($_GET["userId"]) )
-        exit(0);
-
-    $roomId = $_GET["roomId"];
-    $userId = $_GET["userId"];
-
-
-    connectDatabase();        
-    $query = "  SELECT *
-                FROM roomRequest
-                WHERE roomId = $roomId AND userId = '$userId'";
-
-    $result = mysql_query($query);
-
-    echo ($row = mysql_fetch_assoc($result))? 1: 0;
-}
-
-
-function existsBedroomRequest(){
-    if ( !isset($_GET["bedroomId"]) || !isset($_GET["userId"]) )
-        exit(0);
-
-    $bedroomId = $_GET["bedroomId"];
-    $userId = $_GET["userId"];
-
-
-    connectDatabase();        
-    $query = "  SELECT *
-                FROM bedroomRequest
-                WHERE bedroomId = $bedroomId AND userId = '$userId'";
-
-    $result = mysql_query($query);
-
-    echo ($row = mysql_fetch_assoc($result))? 1: 0;
 }

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 14, 2015 at 11:10 AM
+-- Generation Time: Nov 15, 2015 at 07:20 PM
 -- Server version: 5.5.40
 -- PHP Version: 5.4.36-0+deb7u3
 
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `bedroomRequest` (
   UNIQUE KEY `bedroomId` (`bedroomId`,`userId`),
   KEY `roomId` (`bedroomId`),
   KEY `userId` (`userId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=45 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=44 ;
 
 --
 -- Dumping data for table `bedroomRequest`

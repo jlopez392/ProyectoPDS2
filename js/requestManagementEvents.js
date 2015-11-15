@@ -90,7 +90,7 @@ function appendIntoRightPanel(values){
 		generatedStringToAppend += value;
 		generatedStringToAppend += "</li>";
 	});
-	generatedStringToAppend += "</ul";
+	generatedStringToAppend += "</ul>";
 	$("#rightPanel").append(generatedStringToAppend);
 }
 
@@ -141,7 +141,6 @@ $(document).ready(function(){
 
 
 	$("#requestsTable").on("click",".confirmButton", function(){
-		
 		idToSend = $(this).attr("id");
 		actionToGet = (last == "room")? "confirmRoomRequest":"confirmBedroomRequest";
 
@@ -152,13 +151,9 @@ $(document).ready(function(){
 
 		geting.done(function( data ) {
 			alert("Solicitud confirmada");
-		});
-
-		if (last == "room")
-			$("#roomRequestButton").click();
-
-		$("#bedroomRequestButton").click();
-
+			idButtonToClick = (last == 'room')? "#roomRequestButton":"#bedroomRequestButton";
+			$(idButtonToClick).click();
+		});	
 	});
 
 
@@ -194,6 +189,7 @@ $(document).ready(function(){
 		});
 	});
 
+
 	$("#confirmedRequestButton").click(function(){
 		$("#requestsTable thead").empty();
 		$("#requestsTable thead").append(
@@ -206,9 +202,8 @@ $(document).ready(function(){
 	});
 
 
-
 	$("#exitButton").click(function(){
-		var geting = $.get( "./api/?", {
+		$.get( "./api/?", {
 			action: "closeSession"
 		});
 

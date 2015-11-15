@@ -14,7 +14,7 @@ function getCurrentUser(){
 
 
 function printRooms(){
-	$.getJSON("./api/?action=getRooms", function( data ) {
+	$.getJSON("./api/?action=getRooms&userId="+user, function( data ) {
 		$.each(data, function( index, value ) {
 			$("#roomsTable tbody").append(
 				"<tr> \
@@ -24,25 +24,16 @@ function printRooms(){
 			  		<td><button id="+index+" class='requestButton btn'>Solicitar</btn></td> \
 		  		</tr>"
 			);
-	
-			var geting = $.get( "./api/?", {
-				action: "existsRoomRequest",
-				roomId:index,
-				userId:user
-			});
-
-			geting.done(function( data ) {
-				if (data == 1)
-					$("#"+index).addClass("alredyRequested");
-			});
 			
+			if (value["requested"] == 1)
+				$("#"+index).addClass("alredyRequested");
+
 		});
 	});
 }
 
 function printBedrooms(){
-	$.getJSON("./api/?action=getBedrooms", function( data ) {
-		bedrooms = data;
+	$.getJSON("./api/?action=getBedrooms&userId="+user, function( data ) {
 		$.each(data, function( index, value ) {
 			$("#roomsTable tbody").append(
 				"<tr> \
@@ -52,24 +43,17 @@ function printBedrooms(){
 			  		<td><button id="+index+" class='requestButton btn'>Solicitar</btn></td> \
 		  		</tr>"
 			);
-			
-			var geting = $.get( "./api/?", {
-				action: "existsBedroomRequest",
-				bedroomId:index,
-				userId:user
-			});
 
-			geting.done(function( data ) {
-				if (data == 1)
-					$("#"+index).addClass("alredyRequested");
-			});
-				
+			if (value["requested"] == 1)
+				$("#"+index).addClass("alredyRequested");
+
 		});
 	});
 }
 
 
 function printTableHead(){
+
 	id = (last == "room")?"idSalon":"idHabitacion"; 
 	$("#roomsTable thead").empty();
 	$("#roomsTable thead").append(
@@ -89,16 +73,20 @@ $(document).ready(function(){
 
 
 	$("#lookForRoomsButton").click(function(){
+
 		last = "room";
 		printTableHead();
 		printRooms();
+
 	});
 
 
 	$("#lookForBedroomsButton").click(function(){
+
 		last = "bedroom";
 		printTableHead();
 		printBedrooms();
+
 	});
 
 
@@ -120,15 +108,15 @@ $(document).ready(function(){
 
 		geting.done(function( data ) {
 			alert("Se ha realizado la solicitud");
-			if (last == 'room')
-				$("#lookForRoomsButton").click();
-			$("#lookForBedroomsButton").click();
+			idButtonToClick = (last == 'room')? "#lookForRoomsButton":"#lookForBedroomsButton";
+			$(idButtonToClick).click();
 		});
+
 	});
 
 
 	$("#exitButton").click(function(){
-		var geting = $.get( "./api/?", {
+		$.get( "./api/?", {
 			action: "closeSession"
 		});
 
@@ -138,4 +126,3 @@ $(document).ready(function(){
 
 
 });
-
